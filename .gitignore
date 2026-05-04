@@ -67,3 +67,66 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+
+# STM32CubeIDE / Eclipse
+.settings/
+.project
+.cproject
+.loadpath
+*.launch
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.swn
+*.user
+*.d
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.dep
+*.a
+*.out
+*.exe
+*.pyc
+*.class
+*.DS_Store
+*.directory
+*.orig
+*.rej
+*.sublime-workspace
+*.sublime-project
+
+# STM32CubeMX
+*.ioc
+
+# Build output
+build/
+Debug/
+Release/
+Output/
+*.uvoptx
+*.uvprojx
+
+# Keil/MDK
+*.axf
+*.uvguix.*
+
+# IAR
+*.eww
+*.ewd
+*.ewp
+*.ewt
+*.ewc
+*.dep
+
+# Other
+*.zip
+*.7z
+*.tar
+*.gz
+*.rar
