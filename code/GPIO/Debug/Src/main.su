@@ -1,0 +1,5 @@
+../Src/main.cpp:4:5:int main()	16	static
+../Inc/reg_access.hpp:29:17:static void RegAccess<AddrType, RegType, kRegisterAddr, kValue>::Or() [with AddrType = long unsigned int; RegType = long unsigned int; AddrType kRegisterAddr = 1073887280; RegType kValue = 1]	4	static
+../Inc/reg_access.hpp:29:17:static void RegAccess<AddrType, RegType, kRegisterAddr, kValue>::Or() [with AddrType = long unsigned int; RegType = long unsigned int; AddrType kRegisterAddr = 1073872896; RegType kValue = 1024]	4	static
+../Inc/reg_access.hpp:24:17:static void RegAccess<AddrType, RegType, kRegisterAddr, kValue>::Set() [with AddrType = long unsigned int; RegType = long unsigned int; AddrType kRegisterAddr = 1073872916; RegType kValue = 255]	4	static
+../Inc/reg_access.hpp:59:17:static void RegAccess<AddrType, RegType, kRegisterAddr, kValue>::BitToggle() [with AddrType = long unsigned int; RegType = long unsigned int; AddrType kRegisterAddr = 1073872916; RegType kValue = 5]	4	static

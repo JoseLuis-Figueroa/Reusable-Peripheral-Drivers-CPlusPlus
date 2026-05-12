@@ -1,132 +1,88 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-*.so.*
-
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# Build directories
-build/
-Build/
-build-*/
-
-# CMake generated files
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-install_manifest.txt
-compile_commands.json
-
-# Temporary files
-*.tmp
-*.log
-*.bak
-*.swp
-
-# vcpkg
-vcpkg_installed/
-
-# debug information files
-*.dwo
-
-# test output & cache
-Testing/
-.cache/
-
-# STM32CubeIDE / Eclipse
+# ---- STM32CubeIDE & C++ ----
+# STM32CubeIDE project files
 .settings/
 .project
 .cproject
-.loadpath
+.mxproject
+.mxresources/
 *.launch
-*.log
-*.tmp
-*.bak
-*.swp
-*.swo
-*.swn
-*.user
-*.d
-*.o
+*.ioc
+
+# Build output
+build/
+Build/
+Debug/
+Release/
+Output/
+bin/
 *.elf
 *.bin
 *.hex
 *.map
 *.list
 *.dep
+*.o
+*.d
+*.su
 *.a
 *.out
 *.exe
-*.pyc
-*.class
-*.DS_Store
-*.directory
-*.orig
-*.rej
-*.sublime-workspace
-*.sublime-project
-
-# STM32CubeMX
-*.ioc
-
-# Build output
-build/
-Debug/
-Release/
-Output/
+*.swo
+*.swn
+*.axf
 *.uvoptx
 *.uvprojx
-
-# Keil/MDK
-*.axf
 *.uvguix.*
-
-# IAR
 *.eww
 *.ewd
 *.ewp
 *.ewt
 *.ewc
-*.dep
 
-# Other
+# IDE files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS generated files
+*.DS_Store
+*.directory
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Archives
 *.zip
 *.7z
 *.tar
 *.gz
 *.rar
+
+# C++ object and dependency files
+*.slo
+*.lo
+*.obj
+*.gch
+*.pch
+*.lai
+*.la
+*.lib
+*.dylib
+*.so
+*.so.*
+
+# Temporary and log files
+*.tmp
+*.log
+*.bak
+*.swp
+.cache/
+Testing/
+
+# vcpkg
+vcpkg_installed/
+
+# Do not ignore source folders
+!code/GPIO/
+!code/GPIO/**
