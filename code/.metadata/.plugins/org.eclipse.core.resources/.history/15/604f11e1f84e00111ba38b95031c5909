@@ -1,0 +1,135 @@
+/*****************************************************************************
+ * @file GPIO.hpp
+ * @author Jose Luis Figueroa
+ * @brief The interface definition for the GPIO. This is the header file for
+ * the definition of the interface for a general purpose input/output peripheral on
+ * a standard microcontroller.
+ *
+ * @version 1.0
+ * @date 2026-May-12
+ *
+ * @copyright Copyright (c) 2023 Jose Luis Figueroa. MIT License.
+ *
+ *****************************************************************************/
+
+#ifndef GPIO_HPP_
+#define GPIO_HPP_
+
+#include "stm32f4xx.hpp"
+#include <tuple>
+
+
+/*****************************************************************************
+ * Class Register
+*//**
+ *\b Description:
+ * The Register class is a template class that provides an interface for accessing
+ * hardware registers in a microcontroller. It allows users to read from and write
+ * to specific memory addresses that correspond to hardware registers, enabling
+ * direct manipulation of peripheral configurations and operations. The class is
+ * designed to be flexible and can be instantiated for different types of registers
+ * by specifying the data type and the register address as template parameters.
+ *
+ * @param T The TypeDef structure of the register, which defines the layout
+ * 		   and fields of the register.
+ * @param address The memory address of the register to be accessed.
+
+*****************************************************************************/
+template <typename T, uint32_t address>
+class Register final {
+	public:
+	operator T* () const {
+		return reinterpret_cast<T*>(address);
+	}
+
+	T* operator->() const {
+		return operator T*();
+	}
+};
+
+/*****************************************************************************
+ * Class GPIODriver
+*//**
+*\b Description:
+ * The GPIODriver class is a template class that provides an interface for configuring
+ * and controlling the General Purpose Input/Output (GPIO) peripheral of a microcontroller.
+ * This class allows users to set up GPIO pins for various functions such as input, output,
+ * alternate function, and analog mode.
+ *
+ * PRE-CONDITION: The GPIOx clocks must be configured and enabled. <br>
+ *
+ * @param[in]   gpio_idx: The index of the GPIO peripheral to be used (0 for GPIOA,
+ * 1 for GPIOB, etc.). This index is used to select the appropriate base address for
+ * the GPIO registers and to enable the corresponding clock in the RCC AHB1ENR register.
+ *
+ * @return  void
+ *
+ * \b Example:
+ * @code
+ * GPIODriver<0> GPIO1; // Create an instance
+ * @endcode
+ *
+*****************************************************************************/
+template <uint8_t gpio_idx>
+class GPIODriver final {
+	// Define the GPIO base addresses for the peripheral instances.
+	static constexpr std::tuple<uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t> gpio_addresses = {
+			mcal::reg::gpio::kGPIOA, mcal::reg::gpio::kGPIOB, mcal::reg::gpio::kGPIOC, mcal::reg::gpio::kGPIOD,
+			mcal::reg::gpio::kGPIOE, mcal::reg::gpio::kGPIOH };
+
+	// Create a Register instance for the GPIO peripheral using the specified index to select the base address.
+	static constexpr Register<GPIO_TypeDef, std::get<gpio_idx>(gpio_addresses)> GPIO{};
+
+	// Create a Register instance for the RCC AHB1 peripheral clock enable register.
+	static constexpr Register<RCC_TypeDef, mcal::reg::rcc::kRccBase> RCC{};
+
+	public:
+	// Constructor to enable the clock for the specified GPIO peripheral.
+	GPIODriver() {
+    }
+
+/*****************************************************************************
+ * Function gpio_config
+*//**
+*\b Description:
+ * The gpio_config function is responsible for initializing and configuring the
+ * GPIO peripheral based on the template parameters provided during the instantiation
+ * of the GPIODriver class. This function sets up the GPIO pins according to
+ * the specified configuration, which may include setting the mode (input,
+ * output, alternate function, or analog), output type (push-pull or open-drain),
+ * output speed, and pull-up/pull-down resistors. The configuration is determined
+ * by the template parameters defined in the GPIODriver class, which specify
+ * the number of channels, resolution, and GPIO index.
+ *
+ * PRE-CONDITION: The GPIOx and ADCx clocks must be configured and enabled. <br>
+ * PRE-CONDITION: The GPIO class must be instantiated with valid template parameters
+ * 				  for the number of channels, resolution, and GPIO index before
+ * 				  calling this function. <br>
+ *
+ * POST-CONDITION: The GPIO peripheral is initialized and configured according to the
+ * 				   template parameters.
+ *
+ * @param  void
+ * @return void
+ *
+ * \b Example:
+ * @code
+ * GPIODriver<0> GPIO1; // Create an instance
+ * gpio.gpio_config(); // Initialize and configure the GPIO peripheral
+ * @endcode
+ *
+*****************************************************************************/
+	void gpio_config(){
+		// Enable the clock for the specified GPIO peripheral in the RCC AHB1ENR register.
+        RCC->AHB1ENR |= (1U << 0);
+
+        // Set PA5 as output
+        GPIO->MODER |= (0x3U << (5 * 2));
+
+	}
+
+
+
+};
+
+#endif /* GPIO_HPP_ */

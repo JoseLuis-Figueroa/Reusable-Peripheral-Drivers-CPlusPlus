@@ -1,5 +1,7 @@
-../Src/main.cpp:4:5:int main()	2
-../Inc/reg_access.hpp:29:17:static void RegAccess<AddrType, RegType, kRegisterAddr, kValue>::Or() [with AddrType = long unsigned int; RegType = long unsigned int; AddrType kRegisterAddr = 1073887280; RegType kValue = 1]	1
-../Inc/reg_access.hpp:29:17:static void RegAccess<AddrType, RegType, kRegisterAddr, kValue>::Or() [with AddrType = long unsigned int; RegType = long unsigned int; AddrType kRegisterAddr = 1073872896; RegType kValue = 1024]	1
-../Inc/reg_access.hpp:24:17:static void RegAccess<AddrType, RegType, kRegisterAddr, kValue>::Set() [with AddrType = long unsigned int; RegType = long unsigned int; AddrType kRegisterAddr = 1073872916; RegType kValue = 255]	1
-../Inc/reg_access.hpp:59:17:static void RegAccess<AddrType, RegType, kRegisterAddr, kValue>::BitToggle() [with AddrType = long unsigned int; RegType = long unsigned int; AddrType kRegisterAddr = 1073872916; RegType kValue = 5]	1
+../Src/main.cpp:10:5:int main()	1
+../Inc/GPIO.hpp:88:2:GPIODriver<gpio_idx>::GPIODriver() [with unsigned char gpio_idx = 0]	1
+../Inc/GPIO.hpp:122:7:void GPIODriver<gpio_idx>::gpio_config() [with unsigned char gpio_idx = 0]	1
+../Inc/GPIO.hpp:45:5:T* Register<T, address>::operator->() const [with T = RCC_TypeDef; long unsigned int address = 1073887232]	1
+../Inc/GPIO.hpp:45:5:T* Register<T, address>::operator->() const [with T = GPIO_TypeDef; long unsigned int address = 1073872896]	1
+../Inc/GPIO.hpp:41:2:Register<T, address>::operator T*() const [with T = RCC_TypeDef; long unsigned int address = 1073887232]	1
+../Inc/GPIO.hpp:41:2:Register<T, address>::operator T*() const [with T = GPIO_TypeDef; long unsigned int address = 1073872896]	1
