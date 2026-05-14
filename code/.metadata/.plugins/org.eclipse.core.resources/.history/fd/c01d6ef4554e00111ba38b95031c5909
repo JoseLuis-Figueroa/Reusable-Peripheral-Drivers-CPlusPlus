@@ -1,0 +1,153 @@
+/**
+ * @file stm32f4xx.hpp
+ * @author Jose Luis Figueroa
+ * @brief CMSIS STM32F401xE device peripheral access layer header file.
+ * This file provides a set of data structures and macros to access the hardware
+ * registers of the STM32F401xE microcontroller. It is designed to be used in embedded
+ * software development for this specific microcontroller, allowing developers to
+ * interact with the hardware peripherals in a structured and efficient manner.
+ *
+ * @version 1.0
+ * @date 2026-May-12
+ *
+ * @copyright Copyright (c) 2023 Jose Luis Figueroa. MIT License.
+ *
+ */
+
+#ifndef STM32F4xx_HPP_
+#define STM32F4xx_HPP_
+
+
+#include <cstdint>
+
+/**
+  * @brief General Purpose I/O
+  */
+
+typedef struct
+{
+	volatile uint32_t MODER;    /*!< GPIO port mode register,               Address offset: 0x00      */
+	volatile uint32_t OTYPER;   /*!< GPIO port output type register,        Address offset: 0x04      */
+	volatile uint32_t OSPEEDR;  /*!< GPIO port output speed register,       Address offset: 0x08      */
+	volatile uint32_t PUPDR;    /*!< GPIO port pull-up/pull-down register,  Address offset: 0x0C      */
+	volatile uint32_t IDR;      /*!< GPIO port input data register,         Address offset: 0x10      */
+	volatile uint32_t ODR;      /*!< GPIO port output data register,        Address offset: 0x14      */
+	volatile uint32_t BSRR;     /*!< GPIO port bit set/reset register,      Address offset: 0x18      */
+	volatile uint32_t LCKR;     /*!< GPIO port configuration lock register, Address offset: 0x1C      */
+	volatile uint32_t AFR[2];   /*!< GPIO alternate function registers,     Address offset: 0x20-0x24 */
+} GPIO_TypeDef;
+
+/*
+ * Peripheral_memory_map
+ */
+
+namespace mcal{
+
+	namespace reg{
+
+		// Base address for all peripherals.
+		constexpr std::uint32_t kPeripheralBase = 0x40000000U;
+
+		// AHB1 peripheral base address.
+		constexpr std::uint32_t kAHB1PeripheralBase = kPeripheralBase + 0x00020000U;
+
+		// RCC base address.
+		constexpr std::uint32_t kRccBase = kAHB1PeripheralBase + 0x3800U;
+
+		namespace rcc{
+
+            constexpr std::uint32_t kRCC_AHB1ENR = kRccBase + 0x30U;
+
+            constexpr std::uint32_t kRCC_AHB2ENR = kRccBase + 0x34U;
+
+        }
+
+		namespace gpio{
+			// GPIO base addresses
+			constexpr std::uint32_t kGPIOA = kAHB1PeripheralBase + 0x0000U;
+			constexpr std::uint32_t kGPIOB = kAHB1PeripheralBase + 0x0400U;
+			constexpr std::uint32_t kGPIOC = kAHB1PeripheralBase + 0x0800U;
+			constexpr std::uint32_t kGPIOD = kAHB1PeripheralBase + 0x0C00U;
+			constexpr std::uint32_t kGPIOE = kAHB1PeripheralBase + 0x1000U;
+			constexpr std::uint32_t kGPIOH = kAHB1PeripheralBase + 0x1C00U;
+
+			namespace cfg_registers{
+				// GPIO register offsets
+				constexpr std::uint32_t kGPIOx_MODER = 0x00U;
+				constexpr std::uint32_t kGPIOx_OTYPER = 0x04U;
+				constexpr std::uint32_t kGPIOx_OSPEEDR = 0x08U;
+				constexpr std::uint32_t kGPIOx_PUPDR = 0x0CU;
+				constexpr std::uint32_t kGPIOx_IDR = 0x10U;
+				constexpr std::uint32_t kGPIOx_ODR = 0x14U;
+				constexpr std::uint32_t kGPIOx_BSRR = 0x18U;
+
+				namespace gpioa_cfg{
+					constexpr std::uint32_t kMODER = kGPIOA + kGPIOx_MODER;
+					constexpr std::uint32_t kOTYPER = kGPIOA + kGPIOx_OTYPER;
+					constexpr std::uint32_t kOSPEEDR = kGPIOA + kGPIOx_OSPEEDR;
+					constexpr std::uint32_t kPUPDR = kGPIOA + kGPIOx_PUPDR;
+					constexpr std::uint32_t kIDR = kGPIOA + kGPIOx_IDR;
+					constexpr std::uint32_t kODR = kGPIOA + kGPIOx_ODR;
+					constexpr std::uint32_t kBSRR = kGPIOA + kGPIOx_BSRR;
+				}
+
+				namespace gpiob_cfg{
+					constexpr std::uint32_t kMODER = kGPIOB + kGPIOx_MODER;
+					constexpr std::uint32_t kOTYPER = kGPIOB + kGPIOx_OTYPER;
+					constexpr std::uint32_t kOSPEEDR = kGPIOB + kGPIOx_OSPEEDR;
+					constexpr std::uint32_t kPUPDR = kGPIOB + kGPIOx_PUPDR;
+					constexpr std::uint32_t kGPIOB_IDR = kGPIOB + kGPIOx_IDR;
+					constexpr std::uint32_t kODR = kGPIOB + kGPIOx_ODR;
+					constexpr std::uint32_t kBSRR = kGPIOB + kGPIOx_BSRR;
+				}
+
+				namespace gpioc_cfg{
+					constexpr std::uint32_t kMODER = kGPIOC + kGPIOx_MODER;
+					constexpr std::uint32_t kOTYPER = kGPIOC + kGPIOx_OTYPER;
+					constexpr std::uint32_t kOSPEEDR = kGPIOC + kGPIOx_OSPEEDR;
+					constexpr std::uint32_t kPUPDR = kGPIOC + kGPIOx_PUPDR;
+					constexpr std::uint32_t kIDR = kGPIOC + kGPIOx_IDR;
+					constexpr std::uint32_t kODR = kGPIOC + kGPIOx_ODR;
+					constexpr std::uint32_t kBSRR = kGPIOC + kGPIOx_BSRR;
+				}
+
+				namespace gpiod_cfg{
+					constexpr std::uint32_t kMODER = kGPIOD + kGPIOx_MODER;
+					constexpr std::uint32_t kOTYPER = kGPIOD + kGPIOx_OTYPER;
+					constexpr std::uint32_t kOSPEEDR = kGPIOD + kGPIOx_OSPEEDR;
+					constexpr std::uint32_t kPUPDR = kGPIOD + kGPIOx_PUPDR;
+					constexpr std::uint32_t kIDR = kGPIOD + kGPIOx_IDR;
+					constexpr std::uint32_t kODR = kGPIOD + kGPIOx_ODR;
+					constexpr std::uint32_t kBSRR = kGPIOD + kGPIOx_BSRR;
+				}
+
+				namespace gpioe_cfg{
+					constexpr std::uint32_t kMODER = kGPIOE + kGPIOx_MODER;
+					constexpr std::uint32_t kOTYPER = kGPIOE + kGPIOx_OTYPER;
+					constexpr std::uint32_t kOSPEEDR = kGPIOE + kGPIOx_OSPEEDR;
+					constexpr std::uint32_t kPUPDR = kGPIOE + kGPIOx_PUPDR;
+					constexpr std::uint32_t kIDR = kGPIOE + kGPIOx_IDR;
+					constexpr std::uint32_t kODR = kGPIOE + kGPIOx_ODR;
+					constexpr std::uint32_t kBSRR = kGPIOE + kGPIOx_BSRR;
+				}
+
+				namespace gpioh_cfg{
+					constexpr std::uint32_t kMODER = kGPIOH + kGPIOx_MODER;
+					constexpr std::uint32_t kOTYPER = kGPIOH + kGPIOx_OTYPER;
+					constexpr std::uint32_t kOSPEEDR = kGPIOH + kGPIOx_OSPEEDR;
+					constexpr std::uint32_t kPUPDR = kGPIOH + kGPIOx_PUPDR;
+					constexpr std::uint32_t kIDR = kGPIOH + kGPIOx_IDR;
+					constexpr std::uint32_t kODR = kGPIOH + kGPIOx_ODR;
+					constexpr std::uint32_t kBSRR = kGPIOH + kGPIOx_BSRR;
+			   }
+
+			} //namespace cfg_registers
+
+		} //namespace gpio
+
+	} //namespace reg
+
+} //namespace mcal
+
+
+#endif /* STM32F4XX_HPP_ */

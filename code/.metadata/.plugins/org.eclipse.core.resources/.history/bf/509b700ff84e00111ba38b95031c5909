@@ -1,0 +1,24 @@
+/*
+ * main.cpp
+ *
+ *  Created on: May 12, 2026
+ *      Author: figue
+ */
+#include "stm32f4xx.hpp"
+
+int main(void)
+{
+	using Driver = GPIODriver<0>; // Create an instance of the GPIODriver for GPIOA
+	Driver GPIOA; // Instantiate the GPIODriver for GPIOA
+	GPIOA.gpio_config(); // Initialize and configure the GPIOA peripheral
+	while (true)
+	{
+		// Toggle the GPIO pin (for example, PA5) to create a blinking effect on an LED connected to that pin.
+		GPIOA->ODR ^= (1U << 5); // Toggle PA5
+		for (volatile int i = 0; i < 1000000; ++i); // Simple delay loop
+	}
+
+
+}
+
+

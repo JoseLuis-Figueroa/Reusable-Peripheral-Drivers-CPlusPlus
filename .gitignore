@@ -1,69 +1,88 @@
-# Prerequisites
-*.d
+# ---- STM32CubeIDE & C++ ----
+# STM32CubeIDE project files
+.settings/
+.project
+.cproject
+.mxproject
+.mxresources/
+*.launch
+*.ioc
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-*.so.*
-
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# Build directories
+# Build output
 build/
 Build/
-build-*/
+Debug/
+Release/
+Output/
+bin/
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.dep
+*.o
+*.d
+*.su
+*.a
+*.out
+*.exe
+*.swo
+*.swn
+*.axf
+*.uvoptx
+*.uvprojx
+*.uvguix.*
+*.eww
+*.ewd
+*.ewp
+*.ewt
+*.ewc
 
-# CMake generated files
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-install_manifest.txt
-compile_commands.json
+# IDE files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
 
-# Temporary files
+# OS generated files
+*.DS_Store
+*.directory
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Archives
+*.zip
+*.7z
+*.tar
+*.gz
+*.rar
+
+# C++ object and dependency files
+*.slo
+*.lo
+*.obj
+*.gch
+*.pch
+*.lai
+*.la
+*.lib
+*.dylib
+*.so
+*.so.*
+
+# Temporary and log files
 *.tmp
 *.log
 *.bak
 *.swp
+.cache/
+Testing/
 
 # vcpkg
 vcpkg_installed/
 
-# debug information files
-*.dwo
-
-# test output & cache
-Testing/
-.cache/
+# Do not ignore source folders
+!code/GPIO/
+!code/GPIO/**
