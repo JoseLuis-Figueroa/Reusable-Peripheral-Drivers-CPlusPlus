@@ -84,9 +84,162 @@ class GPIODriver final {
 	inline static constexpr Register<RCC_TypeDef, mcal::reg::kRccBase> RCC{};
 
 	public:
+
+/*****************************************************************************
+* Typedefs
+*****************************************************************************/
+	/**
+	 * Defines the possible states for a digital output pin.
+	*/
+	enum class GPIOPinState : uint8_t {
+        GPIO_Low = 0,	/**< Defines digital state ground*/
+        GPIO_High = 1	/**< Defines digital state power*/
+    };
+
+	/**
+	 * Define the ports contained on the MCU device. It is used to identify the
+	 * specific port GPIO to configure the register map.
+	 */
+	enum class GPIOPort : uint8_t {
+        GPIOA = 0,	/**< Port A*/
+        GPIOB = 1,	/**< Port B*/
+        GPIOC = 2,	/**< Port C*/
+        GPIOD = 3,	/**< Port D*/
+        GPIOH = 4,	/**< Port H*/
+    };
+
+	/**
+	 * Defines all the pins contained on the MCU device. It is used to set a
+	 * specific bit on the ports.
+	 */
+	enum class GPIOPin : uint8_t {
+        GPIO_Pin0 = 0,		/**< GPIO 0 */
+        GPIO_Pin1 = 1,		/**< GPIO 1 */
+        GPIO_Pin2 = 2,		/**< GPIO 2 */
+		GPIO_Pin3 = 3,		/**< GPIO 3 */
+		GPIO_Pin4 = 4,		/**< GPIO 4 */
+		GPIO_Pin5 = 5,		/**< GPIO 5 */
+		GPIO_Pin6 = 6,		/**< GPIO 6 */
+		GPIO_Pin7 = 7,		/**< GPIO 7 */
+		GPIO_Pin8 = 8,		/**< GPIO 8 */
+		GPIO_Pin9 = 9,		/**< GPIO 9 */
+		GPIO_Pin10 = 10,	/**< GPIO 10 */
+		GPIO_Pin11 = 11,	/**< GPIO 11 */
+		GPIO_Pin12 = 12,	/**< GPIO 12 */
+		GPIO_Pin13 = 13,	/**< GPIO 13 */
+		GPIO_Pin14 = 14,	/**< GPIO 14 */
+		GPIO_Pin15 = 15,	/**< GPIO 15 */
+    };
+
+	/**
+	 * Defines the mode of the GPIO pin as an input, output, alternate function
+	 * and analog.
+	 */
+	enum class GPIOMode : uint8_t {
+        GPIO_Input = 0b00,		/**< GPIO pin configured as input */
+        GPIO_Output = 0b01,	    /**< GPIO pin configured as output */
+		GPIO_Function = 0b10,	/**< GPIO pin configured as alternate function */
+		GPIO_Analog = 0b11		/**< GPIO pin configured as analog */
+    };
+
+	/**
+	 * Define the output type of the Input/output port.
+	 */
+	enum class GPIOOutputType : uint8_t {
+        GPIO_PushPull = 0,	/**< Output type push-pull */
+        GPIO_OpenDrain = 1	/**< Output type open-drain */
+    };
+
+	/**
+	 * Defines the output speed settings available
+	 */
+	enum class GPIOOutputSpeed : uint8_t {
+        GPIO_LowSpeed = 0b00,		/**< Output speed low */
+        GPIO_MediumSpeed = 0b01,	/**< Output speed medium */
+        GPIO_HighSpeed = 0b10,		/**< Output speed high */
+        GPIO_VerySpeed = 0b11		/**< Output speed very */
+    };
+
+	/**
+	 * Defines the possible states of the channel pull-ups.
+	 */
+	enum class GPIOPullUpPullDown : uint8_t {
+        GPIO_NoPull = 0b00,		/**< No pull-up or pull-down */
+        GPIO_PullUp = 0b01,		/**< Pull-up resistor enabled */
+        GPIO_PullDown = 0b10	/**< Pull-down resistor enabled */
+    };
+
+	/**
+	 * Defines the possible DIO alternate function. A multiplexer is used to
+	 * select the alternate function
+	 */
+	enum class GPIOAlternateFunction : uint8_t {
+        GPIO_AF0 = 0b0000,		/**< Alternate function AF0 */
+        GPIO_AF1 = 0b0001,		/**< Alternate function AF1 */
+        GPIO_AF2 = 0b0010,		/**< Alternate function AF2 */
+        GPIO_AF3 = 0b0011,		/**< Alternate function AF3 */
+        GPIO_AF4 = 0b0100,		/**< Alternate function AF4 */
+        GPIO_AF5 = 0b0101,		/**< Alternate function AF5 */
+        GPIO_AF6 = 0b0110,		/**< Alternate function AF6 */
+        GPIO_AF7 = 0b0111,		/**< Alternate function AF7 */
+        GPIO_AF8 = 0b1000,		/**< Alternate function AF8 */
+        GPIO_AF9 = 0b1001,		/**< Alternate function AF9 */
+        GPIO_AF10 = 0b1010,     /**< Alternate function AF10 */
+        GPIO_AF11 = 0b1011,     /**< Alternate function AF11 */
+        GPIO_AF12 = 0b1100,     /**< Alternate function AF12 */
+        GPIO_AF13 = 0b1101,     /**< Alternate function AF13 */
+        GPIO_AF14 = 0b1110,     /**< Alternate function AF14 */
+        GPIO_AF15 = 0b1111      /**< Alternate function AF15 */
+    };
+
 	// Constructor to enable the clock for the specified GPIO peripheral.
 	GPIODriver() {
     }
+
+/*****************************************************************************
+ * Function gpio_config
+*//**
+*\b Description:
+ * The gpio_config function is responsible for initializing and configuring the
+ * GPIO peripheral based on the template parameters provided during the instantiation
+ * of the GPIODriver class. This function sets up the GPIO pins according to
+ * the specified configuration, which may include setting the mode (input,
+ * output, alternate function, or analog), output type (push-pull or open-drain),
+ * output speed, and pull-up/pull-down resistors. The configuration is determined
+ * by the template parameters defined in the GPIODriver class, which specify
+ * the number of channels, resolution, and GPIO index.
+ *
+ * PRE-CONDITION: The GPIOx and ADCx clocks must be configured and enabled. <br>
+ * PRE-CONDITION: The GPIO class must be instantiated with valid template parameters
+ * 				  for the number of channels, resolution, and GPIO index before
+ * 				  calling this function. <br>
+ *
+ * POST-CONDITION: The GPIO peripheral is initialized and configured according to the
+ * 				   template parameters.
+ *
+ * @param  void
+ * @return void
+ *
+ * \b Example:
+ * @code
+ * GPIODriver<0> GPIO1; // Create an instance
+ * gpio.gpio_config(); // Initialize and configure the GPIO peripheral
+ * @endcode
+ *
+*****************************************************************************/
+	void gpio_config(){
+		// Enable the clock for the specified GPIO peripheral in the RCC AHB1ENR register.
+		RCC->AHB1ENR |= (1U << 0);
+
+		// Set PA5 as output
+		GPIO->MODER |= (1U<<10);
+		GPIO->MODER &=~(1U<<11);
+
+
+		GPIO->ODR ^= (1U << 5); // Toggle PA5
+
+	}
+
 
 };
 
