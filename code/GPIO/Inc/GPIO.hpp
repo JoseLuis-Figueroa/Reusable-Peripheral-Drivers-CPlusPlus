@@ -53,14 +53,11 @@ class Register final {
 *\b Description:
  * The GPIODriver class is a template class that provides an interface for configuring
  * and controlling the General Purpose Input/Output (GPIO) peripheral of a microcontroller.
- * This class allows users to set up GPIO pins for various functions such as input, output,
- * alternate function, and analog mode.
  *
- * PRE-CONDITION: The GPIOx clocks must be configured and enabled. <br>
- *
- * @param[in]   gpio_idx: The index of the GPIO peripheral to be used (0 for GPIOA,
- * 1 for GPIOB, etc.). This index is used to select the appropriate base address for
- * the GPIO registers and to enable the corresponding clock in the RCC AHB1ENR register.
+ * @param[in] gpio_idx: The index of the GPIO peripheral to be used (GPIOA =0,
+ * GPIOB = 1, GPIOC = 2, GPIOD = 3, GPIOE = 4, GPIOH = 5). This index is used to
+ * select the appropriate base address for the GPIO registers and to enable the
+ * corresponding clock in the RCC AHB1ENR register.
  *
  * @return  void
  *
@@ -91,7 +88,7 @@ class GPIODriver final {
 	/**
 	 * Defines the possible states for a digital output pin.
 	*/
-	enum class GPIOPinState : uint8_t {
+	enum class GPIOPinState : uint32_t {
         GPIO_Low = 0,	/**< Defines digital state ground*/
         GPIO_High = 1	/**< Defines digital state power*/
     };
@@ -100,7 +97,7 @@ class GPIODriver final {
 	 * Define the ports contained on the MCU device. It is used to identify the
 	 * specific port GPIO to configure the register map.
 	 */
-	enum class GPIOPort : uint8_t {
+	enum class GPIOPort : uint32_t {
         GPIOA = 0,	/**< Port A*/
         GPIOB = 1,	/**< Port B*/
         GPIOC = 2,	/**< Port C*/
@@ -112,7 +109,7 @@ class GPIODriver final {
 	 * Defines all the pins contained on the MCU device. It is used to set a
 	 * specific bit on the ports.
 	 */
-	enum class GPIOPin : uint8_t {
+	enum class GPIOPin : uint32_t {
         GPIO_Pin0 = 0,		/**< GPIO 0 */
         GPIO_Pin1 = 1,		/**< GPIO 1 */
         GPIO_Pin2 = 2,		/**< GPIO 2 */
@@ -135,7 +132,7 @@ class GPIODriver final {
 	 * Defines the mode of the GPIO pin as an input, output, alternate function
 	 * and analog.
 	 */
-	enum class GPIOMode : uint8_t {
+	enum class GPIOMode : uint32_t {
         GPIO_Input = 0b00,		/**< GPIO pin configured as input */
         GPIO_Output = 0b01,	    /**< GPIO pin configured as output */
 		GPIO_Function = 0b10,	/**< GPIO pin configured as alternate function */
@@ -145,7 +142,7 @@ class GPIODriver final {
 	/**
 	 * Define the output type of the Input/output port.
 	 */
-	enum class GPIOOutputType : uint8_t {
+	enum class GPIOOutputType : uint32_t {
         GPIO_PushPull = 0,	/**< Output type push-pull */
         GPIO_OpenDrain = 1	/**< Output type open-drain */
     };
@@ -153,7 +150,7 @@ class GPIODriver final {
 	/**
 	 * Defines the output speed settings available
 	 */
-	enum class GPIOOutputSpeed : uint8_t {
+	enum class GPIOOutputSpeed : uint32_t {
         GPIO_LowSpeed = 0b00,		/**< Output speed low */
         GPIO_MediumSpeed = 0b01,	/**< Output speed medium */
         GPIO_HighSpeed = 0b10,		/**< Output speed high */
@@ -163,7 +160,7 @@ class GPIODriver final {
 	/**
 	 * Defines the possible states of the channel pull-ups.
 	 */
-	enum class GPIOPullUpPullDown : uint8_t {
+	enum class GPIOPullUpPullDown : uint32_t {
         GPIO_NoPull = 0b00,		/**< No pull-up or pull-down */
         GPIO_PullUp = 0b01,		/**< Pull-up resistor enabled */
         GPIO_PullDown = 0b10	/**< Pull-down resistor enabled */
@@ -173,7 +170,7 @@ class GPIODriver final {
 	 * Defines the possible DIO alternate function. A multiplexer is used to
 	 * select the alternate function
 	 */
-	enum class GPIOAlternateFunction : uint8_t {
+	enum class GPIOAlternateFunction : uint32_t {
         GPIO_AF0 = 0b0000,		/**< Alternate function AF0 */
         GPIO_AF1 = 0b0001,		/**< Alternate function AF1 */
         GPIO_AF2 = 0b0010,		/**< Alternate function AF2 */
@@ -197,44 +194,143 @@ class GPIODriver final {
     }
 
 /*****************************************************************************
- * Function gpio_config
+ * Function init
 *//**
 *\b Description:
- * The gpio_config function is responsible for initializing and configuring the
- * GPIO peripheral based on the template parameters provided during the instantiation
- * of the GPIODriver class. This function sets up the GPIO pins according to
- * the specified configuration, which may include setting the mode (input,
- * output, alternate function, or analog), output type (push-pull or open-drain),
- * output speed, and pull-up/pull-down resistors. The configuration is determined
- * by the template parameters defined in the GPIODriver class, which specify
- * the number of channels, resolution, and GPIO index.
+ * The init function is responsible for initializing and configuring the
+ * GPIO peripheral based on the parameters provided. This function sets up
+ * the GPIO pins according to the specified configuration, which may include
+ * setting the mode (input, output, alternate function, or analog),
+ * output type (push-pull or open-drain), output speed, pull-up/pull-down
+ * resistors and alternate function selection.
  *
- * PRE-CONDITION: The GPIOx and ADCx clocks must be configured and enabled. <br>
- * PRE-CONDITION: The GPIO class must be instantiated with valid template parameters
- * 				  for the number of channels, resolution, and GPIO index before
- * 				  calling this function. <br>
+ * PRE-CONDITION: The user must ensure that the appropriate GPIO peripheral
+ * is selected by instantiating the GPIODriver class with the correct index
+ * corresponding to the desired GPIO port.
  *
- * POST-CONDITION: The GPIO peripheral is initialized and configured according to the
- * 				   template parameters.
+ * POST-CONDITION: The specified GPIO pin will be configured according to
+ * the provided parameters, and the clock for the GPIO peripheral will be
+ * enabled in the RCC AHB1ENR register. The GPIO pin will be ready for use
+ * based on the configured settings.
  *
- * @param  void
+ * @param[in] pin The specific GPIO pin to be configured (e.g., GPIO_Pin0, GPIO_Pin1, etc.).
+ * @param[in] mode The mode of the GPIO pin (input, output, alternate function, or analog).
+ * @param[in] output_type The output type for the GPIO pin (push-pull or open-drain).
+ * @param[in] output_speed The output speed for the GPIO pin (low, medium, high, or very high).
+ * @param[in] pull_up_down The pull-up/pull-down configuration for the GPIO pin (no pull, pull-up, or pull-down).
+ * @param[in] function The alternate function selection for the GPIO pin (AF0 to AF15)
+ * if the mode is set to alternate function.
+ *
  * @return void
  *
  * \b Example:
  * @code
- * GPIODriver<0> GPIO1; // Create an instance
- * gpio.gpio_config(); // Initialize and configure the GPIO peripheral
+ * GPIODriver<0> GPIOA; // Create an instance
+ * using gpioa = GPIODriver<0>;
+ * GPIOA.init(gpioa::GPIOPin::GPIO_Pin5, gpioa::GPIOMode::GPIO_Output,
+ *            gpioa::GPIOOutputType::GPIO_PushPull, gpioa::GPIOOutputSpeed::GPIO_LowSpeed,
+ *            gpioa::GPIOPullUpPullDown::GPIO_NoPull, gpioa::GPIOAlternateFunction::GPIO_AF0);
+ *
  * @endcode
  *
 *****************************************************************************/
-	void gpio_config(){
+	void init(GPIOPin pin, GPIOMode mode, GPIOOutputType output_type, GPIOOutputSpeed output_speed, GPIOPullUpPullDown pull_up_down, GPIOAlternateFunction function)
+	{
 		// Enable the clock for the specified GPIO peripheral in the RCC AHB1ENR register.
-		RCC->AHB1ENR |= (1U << 0);
+		if (gpio_idx == 0) {
+            RCC->AHB1ENR |= (1U << 0); // Enable clock for GPIOA
+        } else if (gpio_idx == 1) {
+            RCC->AHB1ENR |= (1U << 1); // Enable clock for GPIOB
+        } else if (gpio_idx == 2) {
+            RCC->AHB1ENR |= (1U << 2); // Enable clock for GPIOC
+        } else if (gpio_idx == 3) {
+            RCC->AHB1ENR |= (1U << 3); // Enable clock for GPIOD
+        } else if (gpio_idx == 4) {
+            RCC->AHB1ENR |= (1U << 4); // Enable clock for GPIOE
+        } else if (gpio_idx == 5) {
+            RCC->AHB1ENR |= (1U << 7); // Enable clock for GPIOH
+        }
 
-		// Set PA5 as output
-		GPIO->MODER |= (1U<<10);
-		GPIO->MODER &=~(1U<<11);
+		// Configure the GPIO pin mode in the MODER register.
+		if (mode == GPIOMode::GPIO_Input){
+			GPIO->MODER &= ~(0b11U << (static_cast<uint32_t>(pin) * 2U));
+		}
+		else if (mode == GPIOMode::GPIO_Output)
+		{
+			GPIO->MODER |= (0b01U << (static_cast<uint32_t>(pin) * 2U));
+			GPIO->MODER &= ~(0b10U << (static_cast<uint32_t>(pin) * 2U));
+        }
+		else if (mode == GPIOMode::GPIO_Function)
+		{
+			GPIO->MODER &= ~(0b01U << (static_cast<uint32_t>(pin) * 2U));
+			GPIO->MODER |= (0b10U << (static_cast<uint32_t>(pin) * 2U));
+        }
+		else if (mode == GPIOMode::GPIO_Analog)
+		{
+			GPIO->MODER |= (0b01U << (static_cast<uint32_t>(pin) * 2U));
+			GPIO->MODER |= (0b10U << (static_cast<uint32_t>(pin) * 2U));
+        }
 
+		// Configure the GPIO output type in the OTYPER register.
+		if (output_type == GPIOOutputType::GPIO_PushPull)
+        {
+            GPIO->OTYPER &= ~(1U << static_cast<uint32_t>(pin));
+        }
+        else if (output_type == GPIOOutputType::GPIO_OpenDrain)
+        {
+            GPIO->OTYPER |= (1U << static_cast<uint32_t>(pin));
+        }
+
+		// Configure the GPIO output speed in the OSPEEDR register.
+		if(output_speed == GPIOOutputSpeed::GPIO_LowSpeed)
+        {
+            GPIO->OSPEEDR &= ~(0b11U << (static_cast<uint32_t>(pin) * 2U));
+        }
+        else if (output_speed == GPIOOutputSpeed::GPIO_MediumSpeed)
+        {
+            GPIO->OSPEEDR |= (0b01U << (static_cast<uint32_t>(pin) * 2U));
+            GPIO->OSPEEDR &= ~(0b10U << (static_cast<uint32_t>(pin) * 2U));
+        }
+        else if (output_speed == GPIOOutputSpeed::GPIO_HighSpeed)
+        {
+        	GPIO->OSPEEDR &= ~(0b01U << (static_cast<uint32_t>(pin) * 2U));
+            GPIO->OSPEEDR |= (0b10U << (static_cast<uint32_t>(pin) * 2U));
+        }
+        else if (output_speed == GPIOOutputSpeed::GPIO_VerySpeed)
+        {
+            GPIO->OSPEEDR |= (0b11U << (static_cast<uint32_t>(pin) * 2U));
+        }
+
+		// Configure the GPIO pull-up/pull-down resistors in the PUPDR register.
+		if (pull_up_down == GPIOPullUpPullDown::GPIO_NoPull)
+        {
+            GPIO->PUPDR &= ~(0b11U << (static_cast<uint32_t>(pin) * 2U));
+        }
+        else if (pull_up_down == GPIOPullUpPullDown::GPIO_PullUp)
+        {
+            GPIO->PUPDR |= (0b01U << (static_cast<uint32_t>(pin) * 2U));
+            GPIO->PUPDR &= ~(0b10U << (static_cast<uint32_t>(pin) * 2U));
+        }
+        else if (pull_up_down == GPIOPullUpPullDown::GPIO_PullDown)
+        {
+        	GPIO->PUPDR &= ~(0b01U << (static_cast<uint32_t>(pin) * 2U));
+            GPIO->PUPDR |= (0b10U << (static_cast<uint32_t>(pin) * 2U));
+        }
+
+		// Configure the GPIO alternate function in the AFR register if the mode is set to alternate function.
+		if (mode == GPIOMode::GPIO_Function)
+        {
+            if (static_cast<uint32_t>(pin) < 8U)
+            {
+                GPIO->AFR[0] &= ~(0b1111U << (static_cast<uint32_t>(pin) * 4U));
+                GPIO->AFR[0] |= (static_cast<uint32_t>(function) << (static_cast<uint32_t>(pin) * 4U));
+            }
+            else
+            {
+                GPIO->AFR[1] &= ~(0b1111U << ((static_cast<uint32_t>(pin) - 8U) * 4U));
+                GPIO->AFR[1] |= (static_cast<uint32_t>(function) << ((static_cast<uint32_t>(pin) - 8U) * 4U));
+            }
+        }
 
 		GPIO->ODR ^= (1U << 5); // Toggle PA5
 
