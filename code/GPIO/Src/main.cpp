@@ -7,6 +7,8 @@
 #include "stm32f4xx.hpp"
 #include "GPIO.hpp"
 
+
+
 int main(void)
 {
 	GPIODriver<0> GPIOA; // Create an instance of the GPIODriver for GPIOA
@@ -20,32 +22,35 @@ int main(void)
 			   gpioa::GPIOPullUpPullDown::GPIO_NoPull,
 			   gpioa::GPIOAlternateFunction::GPIO_AF0);
 
-	GPIODriver<1> GPIOB; // Create an instance of the GPIODriver for GPIOA
-	using gpiob = GPIODriver<1>;
-
-	// Initialize and configure the GPIOB peripheral for PB6 as an Input with pull-up resistor.
-	GPIOB.init(gpiob::GPIOPin::GPIO_Pin6,
-			   gpiob::GPIOMode::GPIO_Input,
-			   gpiob::GPIOOutputType::GPIO_PushPull,
-			   gpiob::GPIOOutputSpeed::GPIO_LowSpeed,
-			   gpiob::GPIOPullUpPullDown::GPIO_PullUp,
-			   gpiob::GPIOAlternateFunction::GPIO_AF0);
-
-	GPIODriver<2> GPIOC; // Create an instance of the GPIODriver for GPIOA
+	GPIODriver<2> GPIOC; // Create an instance of the GPIODriver for GPIOB
 	using gpioc = GPIODriver<2>;
 
-	// Initialize and configure the GPIOC peripheral for PC7 as an Alternate Function for USART6.
-	GPIOC.init(gpioc::GPIOPin::GPIO_Pin7,
-			   gpioc::GPIOMode::GPIO_Function,
+	// Initialize and configure the GPIOB peripheral for PC13 as an Input.
+	GPIOC.init(gpioc::GPIOPin::GPIO_Pin13,
+			   gpioc::GPIOMode::GPIO_Input,
 			   gpioc::GPIOOutputType::GPIO_PushPull,
 			   gpioc::GPIOOutputSpeed::GPIO_LowSpeed,
 			   gpioc::GPIOPullUpPullDown::GPIO_NoPull,
-			   gpioc::GPIOAlternateFunction::GPIO_AF8);
+			   gpioc::GPIOAlternateFunction::GPIO_AF0);
 
 	while (true)
 	{
+		// Read the state of PB6
+		if (GPIOC.pinRead(gpioc::GPIOPin::GPIO_Pin13) == gpioc::GPIOPinState::GPIO_High)
+		{
+			// If PB6 is high, set PA5 to low
+			GPIOA.pinWrite(gpioa::GPIOPin::GPIO_Pin5, gpioa::GPIOPinState::GPIO_Low);
+
+		}
+		else
+		{
+			// If PB6 is low, set PA5 to High
+			GPIOA.pinWrite(gpioa::GPIOPin::GPIO_Pin5, gpioa::GPIOPinState::GPIO_High);
+		}
+
+		// Toggle the state of PA5
+		GPIOA.pinToggle(gpioa::GPIOPin::GPIO_Pin5);
 
 	}
-
 
 }

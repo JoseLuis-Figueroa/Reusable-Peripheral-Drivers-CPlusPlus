@@ -219,7 +219,6 @@ class GPIODriver final {
  * @param[in] output_speed The output speed for the GPIO pin (low, medium, high, or very high).
  * @param[in] pull_up_down The pull-up/pull-down configuration for the GPIO pin (no pull, pull-up, or pull-down).
  * @param[in] function The alternate function selection for the GPIO pin (AF0 to AF15)
- * if the mode is set to alternate function.
  *
  * @return void
  *
@@ -227,9 +226,12 @@ class GPIODriver final {
  * @code
  * GPIODriver<0> GPIOA; // Create an instance
  * using gpioa = GPIODriver<0>;
- * GPIOA.init(gpioa::GPIOPin::GPIO_Pin5, gpioa::GPIOMode::GPIO_Output,
- *            gpioa::GPIOOutputType::GPIO_PushPull, gpioa::GPIOOutputSpeed::GPIO_LowSpeed,
- *            gpioa::GPIOPullUpPullDown::GPIO_NoPull, gpioa::GPIOAlternateFunction::GPIO_AF0);
+ * GPIOA.init(gpioa::GPIOPin::GPIO_Pin5,
+ * 			  gpioa::GPIOMode::GPIO_Output,
+ *            gpioa::GPIOOutputType::GPIO_PushPull,
+ *            gpioa::GPIOOutputSpeed::GPIO_LowSpeed,
+ *            gpioa::GPIOPullUpPullDown::GPIO_NoPull,
+ *            gpioa::GPIOAlternateFunction::GPIO_AF0);
  *
  * @endcode
  *
@@ -332,10 +334,135 @@ class GPIODriver final {
             }
         }
 
-		GPIO->ODR ^= (1U << 5); // Toggle PA5
-
 	}
 
+/*****************************************************************************
+ * Function: pinRead()
+*//**
+ *\b Description:
+ * The pinRead function is responsible for reading the state of a specific GPIO pin.
+ * It accesses the input data register (IDR) of the GPIO peripheral to determine
+ * whether the specified pin is in a high or low state. The function returns a
+ * boolean value indicating the state of the pin, where true represents a high
+ * state and false represents a low state.
+ *
+ * PRE-CONDITION: The GPIO pin to be read must have been properly initialized
+ * and configured as an input pin using the init function of the GPIODriver class.
+ *
+ * POST-CONDITION: The function will return the current state of the specified GPIO pin.
+ *
+ * @param[in] pin The specific GPIO pin to be read (e.g., GPIO_Pin0, GPIO_Pin1, etc.).
+ *
+ * @return A boolean value indicating the state of the GPIO pin (true for high, false for low).
+ *
+ * \b Example:
+ * @code
+ *	GPIODriver<1> GPIOB;
+ *	using gpiob = GPIODriver<1>;
+ *
+ *	GPIOB.init(gpiob::GPIOPin::GPIO_Pin6,
+ *			   gpiob::GPIOMode::GPIO_Input,
+ *			   gpiob::GPIOOutputType::GPIO_PushPull,
+ *			   gpiob::GPIOOutputSpeed::GPIO_LowSpeed,
+ *			   gpiob::GPIOPullUpPullDown::GPIO_PullUp,
+ *			   gpiob::GPIOAlternateFunction::GPIO_AF0);
+ *
+ *	GPIOB.pinRead(gpiob::GPIOPin::GPIO_Pin6);
+ * @endcode
+ *
+******************************************************************************/
+    GPIOPinState pinRead(GPIOPin pin)
+    {
+        // Read the state of the specified GPIO pin from the input data register (IDR).
+        return ((GPIO->IDR & (1U << static_cast<uint16_t>(pin))) ? GPIOPinState::GPIO_High : GPIOPinState::GPIO_Low);
+    }
+
+/*****************************************************************************
+ * Function: pinWrite()
+*//**
+ *\b Description:
+ * The pinWrite function is responsible for writing a specified state (high or low)
+ * to a specific GPIO pin. It accesses the output data register (ODR) of the GPIO
+ * peripheral to set the state of the specified pin. The function takes a GPIOPinState
+ * as an argument, which indicates whether the pin should be set to a high
+ * state (true) or a low state (false).
+ *
+ * PRE-CONDITION: The GPIO pin to be written must have been properly initialized
+ * and configured as an output pin using the init function of the GPIODriver class.
+ *
+ * POST-CONDITION: The specified GPIO pin will be set to the desired state
+ * (high or low) based on the provided GPIOPinState.
+ *
+ * @param[in] pin The specific GPIO pin to be written (e.g., GPIO_Pin0, GPIO_Pin1, etc.).
+ * @param[in] state The desired state to be written to the GPIO pin (true for high, false for low).
+ *
+ * @return void
+ * \b Example:
+ * @code
+ * GPIODriver<0> GPIOA;
+ * GPIOA.init(gpioa::GPIOPin::GPIO_Pin5,
+ *            gpioa::GPIOMode::GPIO_Output,
+ *            gpioa::GPIOOutputType::GPIO_PushPull,
+ *            gpioa::GPIOOutputSpeed::GPIO_LowSpeed,
+ *            gpioa::GPIOPullUpPullDown::GPIO_NoPull,
+ *            gpioa::GPIOAlternateFunction::GPIO_AF0);
+ *
+ * GPIOA.pinWrite(gpioa::GPIOPin::GPIO_Pin5, GPIODriver<0>::GPIOPinState::GPIO_High);
+ * * @endcode
+ *
+******************************************************************************/
+    void pinWrite(GPIOPin pin, GPIOPinState state)
+    {
+        // Write the specified state to the output data register (ODR) for the specified GPIO pin.
+        if (state == GPIOPinState::GPIO_High)
+        {
+            GPIO->ODR |= (1U << static_cast<uint16_t>(pin));
+        }
+        else
+        {
+            GPIO->ODR &= ~(1U << static_cast<uint16_t>(pin));
+        }
+    }
+
+/*****************************************************************************
+ * Function: pinToggle()
+ *
+*//**
+ *\b Description:
+ * The pinToggle function is responsible for toggling the state of a specific
+ * GPIO pin. It accesses the output data register (ODR) of the GPIO peripheral
+ * to invert the current state of the specified pin. If the pin is currently in
+ * a high state, it will be set to low, and if it is currently in a low state,
+ * it will be set to high.
+ *
+ * PRE-CONDITION: The GPIO pin to be toggled must have been properly initialized
+ * and configured as an output pin using the init function of the GPIODriver class.
+ *
+ * POST-CONDITION: The specified GPIO pin will have its state toggled
+ * (high to low or low to high).
+ *
+ * @param[in] pin The specific GPIO pin to be toggled (e.g., GPIO_Pin0, GPIO_Pin1, etc.).
+ *
+ * @return void
+ * \b Example:
+ * * @code
+ *
+ * GPIODriver<0> GPIOA;
+ * GPIOA.init(gpioa::GPIOPin::GPIO_Pin5,
+ *            gpioa::GPIOMode::GPIO_Output,
+ *            gpioa::GPIOOutputType::GPIO_PushPull,
+ *            gpioa::GPIOOutputSpeed::GPIO_LowSpeed,
+ *            gpioa::GPIOPullUpPullDown::GPIO_NoPull,
+ *            gpioa::GPIOAlternateFunction::GPIO_AF0);
+ *
+ * GPIOA.pinToggle(gpioa::GPIOPin::GPIO_Pin5);
+ * * @endcode
+ * *****************************************************************************/
+    void pinToggle(GPIOPin pin)
+    {
+        // Toggle the state of the specified GPIO pin in the output data register (ODR).
+        GPIO->ODR ^= (1U << static_cast<uint16_t>(pin));
+    }
 
 };
 
