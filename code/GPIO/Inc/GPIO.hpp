@@ -8,7 +8,7 @@
  * @version 1.0
  * @date 2026-May-12
  *
- * @copyright Copyright (c) 2023 Jose Luis Figueroa. MIT License.
+ * @copyright Copyright (c) 2026 Jose Luis Figueroa. MIT License.
  *
  *****************************************************************************/
 
@@ -457,11 +457,84 @@ class GPIODriver final {
  *
  * GPIOA.pinToggle(gpioa::GPIOPin::GPIO_Pin5);
  * * @endcode
- * *****************************************************************************/
+******************************************************************************/
     void pinToggle(GPIOPin pin)
     {
         // Toggle the state of the specified GPIO pin in the output data register (ODR).
         GPIO->ODR ^= (1U << static_cast<uint16_t>(pin));
+    }
+
+/*****************************************************************************
+ * Function: registerWrite()
+ *
+*//**
+ *\b Description:
+ * The registerWrite function is responsible for writing a specified value to a
+ * specific register of the GPIO peripheral. This function allows users to directly
+ * manipulate the registers of the GPIO peripheral for advanced configurations or
+ * operations that may not be covered by the standard pin configuration functions.
+ *
+ * PRE-CONDITION: The user must ensure that the address provided is valid and
+ * corresponds to a register within the GPIO peripheral. Additionally, the user
+ * must ensure that the value being written is appropriate for the specific
+ * register being accessed.
+ *
+ * POST-CONDITION: The specified value will be written to the targeted register
+ * of the GPIO peripheral, potentially altering the configuration or behavior
+ * of the GPIO pins based on the register being modified.
+ *
+ * @param[in] address to the specific register of the GPIO peripheral to be written.
+ * @param[in] value to be written to the specified register.
+ *
+ * @return void
+ * \b Example:
+ * @code
+ * GPIODriver<0> GPIOA;
+ * GPIOA.registerWrite(GPIOA->MODER, 0x28000000);
+ * @endcode
+ *
+******************************************************************************/
+    void registerWrite(uint32_t address, uint32_t value)
+    {
+    	volatile uint32_t* const registerPointer = (uint32_t*)address;
+        *registerPointer = value;
+    }
+
+/*****************************************************************************
+ * Function: registerRead()
+ *
+*//**
+ *\b Description:
+ * The registerRead function is responsible for reading the value from a specific
+ * register of the GPIO peripheral. This function allows users to directly access
+ * the registers of the GPIO peripheral to retrieve information about the current
+ * configuration or status of the GPIO pins, which can be useful for debugging or
+ * monitoring the state of the GPIO peripheral.
+ *
+ * PRE-CONDITION: The user must ensure that the address provided is valid and
+ * corresponds to a register within the GPIO peripheral. Additionally, the user
+ * must ensure that the register being accessed is readable and that the value
+ * being read is appropriate for the specific register being accessed.
+ *
+ * POST-CONDITION: The function will return the value read from the targeted
+ * register of the GPIO peripheral, providing insight into the current
+ * configuration or status of the GPIO pins based on the register being accessed.
+ *
+ * @param[in] address to the specific register of the GPIO peripheral to be read.
+ *
+ * @return The value read from the specified register of the GPIO peripheral.
+ *
+ * \b Example:
+ * @code
+ * GPIODriver<0> GPIOA;
+ * uint32_t moderValue = GPIOA.registerRead(GPIOA->MODER);
+ * @endcode
+ *
+******************************************************************************/
+    uint32_t registerRead(uint32_t address)
+    {
+    	volatile uint32_t* const registerPointer = (uint32_t*)address;
+        return *registerPointer;
     }
 
 };
