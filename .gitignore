@@ -1,4 +1,7 @@
 # ---- STM32CubeIDE & C++ ----
+# Eclipse/STM32CubeIDE workspace metadata (machine-local)
+code/.metadata/
+
 # STM32CubeIDE project files
 .settings/
 .project
@@ -12,6 +15,7 @@
 build/
 Build/
 Debug/
+code/**/Debug/
 Release/
 Output/
 bin/
@@ -82,7 +86,3 @@ Testing/
 
 # vcpkg
 vcpkg_installed/
-
-# Do not ignore source folders
-!code/GPIO/
-!code/GPIO/**
