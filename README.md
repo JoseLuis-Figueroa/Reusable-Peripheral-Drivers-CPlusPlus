@@ -133,7 +133,15 @@ The application continuously monitors the state of the user button connected to 
 
 In addition to standard GPIO operations, the example demonstrates direct register manipulation using the driver's read and write register APIs.
 
-This implementation serves as a **test and validation of the GPIO driver**. 
+This implementation serves as a **test and validation of the GPIO driver**. A video demonstration provides a visual representation of the physical implementation of the GPIO driver.
+
+<p align="center">
+    <img src="https://github.com/JoseLuis-Figueroa/Reusable-Peripheral-Drivers-CPlusPlus/blob/README/documentation/Media/GPIO-Implementation.gif"
+         width="20%"
+         alt="GPIO_Implementation">
+</p>
+
+<p align="center">Image 1. GPIO Hardware Test.</p>
 
 **[Back to top](#table-of-contents)**
 
