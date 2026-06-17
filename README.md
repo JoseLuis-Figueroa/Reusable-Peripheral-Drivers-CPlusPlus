@@ -49,7 +49,6 @@ The driver is designed for bare-metal applications and interacts directly with t
 - **Development Style:** Bare-Metal
 - **IDE:** STM32CubeIDE
 - **Compiler:** GNU ARM Embedded Toolchain
-- **Documentation:** Doxygen
 
 **[Back to top](#table-of-contents)**
 
@@ -102,7 +101,7 @@ You can build the project using STM32CubeIDE.
 
 ## Running Tests
 
-Click the "_Run as_" or "_Debug as_" to flash the firmware using ST-Link.
+Click the **Run as** or **Debug as** to flash the firmware using ST-Link.
 
 ### Other Verification Methods
 
@@ -172,7 +171,7 @@ Current Release:
 
 Contributions are welcome.
 
-Please refer to the `CONTRIBUTING.md` file for details.
+Please refer to the [CONTRIBUTING.md](/documentation/CONTRIBUTING.md) file for details.
 
 **[Back to top](#table-of-contents)**
 
