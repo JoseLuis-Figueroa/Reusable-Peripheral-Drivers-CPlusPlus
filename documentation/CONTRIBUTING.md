@@ -84,7 +84,6 @@ Install the following tools:
 - STM32CubeIDE
 - GNU ARM Embedded Toolchain
 - Git
-- Doxygen
 - STM32F401RE Nucleo Board (recommended)
 - ST-Link Debugger
 
@@ -98,11 +97,11 @@ Build using STM32CubeIDE:
 
 ## Flashing the Firmware
 
-Click the "_Run as_" option to flash the firmware using ST-Link.
+Click the **Run as** option to flash the firmware using ST-Link.
 
 ## Debugging
 
-Click the "_Debug as_" option to debug the firmware using ST-Link. 
+Click the **Debug as** option to debug the firmware using ST-Link. 
 
 ---
 
@@ -118,7 +117,6 @@ To maintain consistency across the project:
 - Minimize dynamic memory allocation.
 - Avoid unnecessary runtime overhead.
 - Maintain hardware abstraction without sacrificing performance.
-- Document public APIs using Doxygen.
 
 ---
 
